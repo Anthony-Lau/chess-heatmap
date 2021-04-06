@@ -3,11 +3,24 @@ import PropTypes from 'prop-types'
 
 function Form(props) {
   const { handleSubmit, username, setUsername } = props
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSubmit()
+    }
+  }
   return (
     <div>
       <label htmlFor="username">
         Name:
-        <input id="username" type="text" name="name" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="username" />
+        <input
+          id="username"
+          type="text"
+          name="name"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="username"
+          onKeyDown={handleKeyDown}
+        />
       </label>
       <button type="button" onClick={() => handleSubmit()}>go</button>
     </div>

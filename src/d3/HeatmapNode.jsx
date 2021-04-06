@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+
 // import React, { useEffect } from 'react'
 
 export default function createGraph(data, title) {
@@ -14,7 +15,7 @@ export default function createGraph(data, title) {
   const svg = d3.select('#area')
     .append('svg')
     .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
+    .attr('height', height + margin.top + margin.bottom * 6)
     .append('g')
     .attr('transform',
       `translate(${margin.left},${margin.top})`)
@@ -104,26 +105,38 @@ export default function createGraph(data, title) {
     .attr('y', -10)
     .style('text-anchor', 'middle')
     .text(title)
+
+  // create svg element
+  const legend = svg.append('svg').attr('width', width).attr('height', height).attr('y', height + margin.top)
+
+  const legendData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+
+  const legendColor = d3.scaleSequential().domain([1, 10])
+    .interpolator(d3.interpolateOrRd)
+  // const legendColor = d3.scaleOrdinal().domain(legendData)
+  //   .range(d3.schemeOrRd)
+  const gridSize = Math.floor(width / 24)
+  const legendElementWidth = gridSize * 2
+  // const legendWidth = width + margin.left + margin.right
+  const len = legend.selectAll('.firstrow').data(legendData).enter().append('g')
+
+  len
+    .append('rect')
+    .attr('x', (d, i) => legendElementWidth * i)
+    // .attr('y', height)
+    .attr('width', legendElementWidth)
+    .attr('height', 20)
+    .attr('fill', (d) => legendColor(d))
+
+  len
+    .append('text')
+    // .attr('class', 'mono')
+    .text('PLEASE')
+    .attr('x', (d, i) => legendElementWidth * i)
+    .attr('y', height + margin.top * 2)
+    .attr('fill', 'black')
+    .style('text-anchor', 'middle')
+    .attr('font-size', 100)
+    .attr('width', legendElementWidth)
+    .attr('height', 20)
 }
-
-// export default function App() {
-//   useEffect(async () => {
-//     // const pls = await d3.csv('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/heatmap_data.csv')
-//     const rawData = await fetch('https://lichess.org/api/games/user/hiyo_0?max=100',
-//       {
-//         headers: {
-//           Accept: 'application/x-ndjson',
-//         },
-//       })
-//     const rawJson = (await rawData.text()).match(/.+/g).map(JSON.parse)
-//     const data = transformData(rawJson, 'hiyo_0')
-//     createGraph(data[0], 'Frequency Of White Pieces')
-//     createGraph(data[1], 'Frequency Of Black Pieces')
-//   }, [])
-
-//   return (
-//     <div className="App">
-//       <div id="area" height={900} width={450} />
-//     </div>
-//   )
-// }
