@@ -1,20 +1,18 @@
 import * as d3 from 'd3'
-// import React, { useEffect } from 'react'
 
 export default function createGraph(data, title) {
-  // console.log(data)
   // set the dimensions and margins of the graph
   const margin = {
     top: 30, right: 30, bottom: 30, left: 30,
   }
   const width = 450 - margin.left - margin.right
   const height = 450 - margin.top - margin.bottom
-
+  const domain = [0, 150]
   // append the svg object to the body of the page
   const svg = d3.select('#area')
     .append('svg')
     .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
+    .attr('height', height + margin.top + margin.bottom * 6)
     .append('g')
     .attr('transform',
       `translate(${margin.left},${margin.top})`)
@@ -43,10 +41,7 @@ export default function createGraph(data, title) {
   // Build color scale
   const myColor = d3.scaleSequential()
     .interpolator(d3.interpolateOrRd)
-    .domain([-5, 80])
-  // const myColor = d3.scaleLinear()
-  //   .range(['blue', 'red'])
-  //   .domain([1, 5])
+    .domain(domain)
 
   // create a tooltip
   const tooltip = d3.select('#area')
@@ -80,7 +75,6 @@ export default function createGraph(data, title) {
       .style('opacity', 0)
     d3.select(this)
       .style('stroke', 'none')
-      // .style('opacity', 0.8)
   }
 
   svg.selectAll()
@@ -104,26 +98,34 @@ export default function createGraph(data, title) {
     .attr('y', -10)
     .style('text-anchor', 'middle')
     .text(title)
+
+  // create svg element
+  const legend = svg.append('svg').attr('width', width).attr('height', height).attr('y', height + margin.top)
+
+  const legendData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+
+  const legendColor = d3.scaleSequential().domain(domain)
+    .interpolator(d3.interpolateOrRd)
+
+  const gridSize = Math.floor(width / 24)
+  const legendElementWidth = gridSize * 2
+
+  const len = legend.selectAll('.firstrow').data(legendData).enter().append('g')
+
+  len
+    .append('rect')
+    .attr('x', (d, i) => legendElementWidth * i)
+    // .attr('y', height)
+    .attr('width', legendElementWidth)
+    .attr('height', 20)
+    .attr('fill', (d) => legendColor(d * 12.5))
+
+  len
+    .append('text')
+    .text((d) => d * 12)
+    .attr('x', (d, i) => legendElementWidth * i + 15)
+    .attr('y', 30)
+    .attr('fill', 'black')
+    .style('text-anchor', 'middle')
+    .attr('font-size', 10)
 }
-
-// export default function App() {
-//   useEffect(async () => {
-//     // const pls = await d3.csv('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/heatmap_data.csv')
-//     const rawData = await fetch('https://lichess.org/api/games/user/hiyo_0?max=100',
-//       {
-//         headers: {
-//           Accept: 'application/x-ndjson',
-//         },
-//       })
-//     const rawJson = (await rawData.text()).match(/.+/g).map(JSON.parse)
-//     const data = transformData(rawJson, 'hiyo_0')
-//     createGraph(data[0], 'Frequency Of White Pieces')
-//     createGraph(data[1], 'Frequency Of Black Pieces')
-//   }, [])
-
-//   return (
-//     <div className="App">
-//       <div id="area" height={900} width={450} />
-//     </div>
-//   )
-// }

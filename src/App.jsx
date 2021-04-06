@@ -27,7 +27,13 @@ function App() {
       }
       const moveArray = game.moves.split(' ')
       for (let moveIndex = offSet; moveIndex < moveArray.length; moveIndex += 2) {
-        const move = moveArray[moveIndex].slice(-2)
+        const lastChar = moveArray[moveIndex].slice(-1)
+        let move = ''
+        if (lastChar >= '0' && lastChar <= '9') {
+          move = moveArray[moveIndex].slice(-2)
+        } else {
+          move = moveArray[moveIndex].slice(0, -1)
+        }
         const kingSideCastle = move.includes('-') && moveArray[moveIndex].length === 3
         const queenSideCastle = move.includes('-') && moveArray[moveIndex].length === 5
         if (whitePlayer) {
