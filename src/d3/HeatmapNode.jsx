@@ -55,6 +55,7 @@ export default function createGraph(data, title) {
     .style('display', 'inline-block')
     .style('position', 'absolute')
     .style('padding', '5px')
+    .style('color', 'black')
 
   // Three function that change the tooltip when user hover / move / leave a cell
   function mouseover() {
@@ -97,6 +98,8 @@ export default function createGraph(data, title) {
     .attr('x', 400 / 2)
     .attr('y', -10)
     .style('text-anchor', 'middle')
+    .style('color', 'inherit')
+    .style('fill', 'currentColor')
     .text(title)
 
   // create svg element
@@ -128,4 +131,6 @@ export default function createGraph(data, title) {
     .attr('fill', 'black')
     .style('text-anchor', 'middle')
     .attr('font-size', 10)
+    .style('color', 'inherit')
+    .style('fill', 'currentColor')
 }
