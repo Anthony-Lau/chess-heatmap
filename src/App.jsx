@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import createGraph from './d3/HeatmapNode'
 import clearGraph from './d3/ClearGraph'
 import Form from './components/Form'
+import InfoModal from './components/InfoModal'
 
 const Body = styled.div`
   margin: auto;
@@ -129,6 +130,7 @@ function App() {
     <Body>
       <h1>
         Chess Heatmap
+        <InfoModal />
       </h1>
       <Form handleSubmit={handleSubmit} username={username} setUsername={setUsername} />
       {loading ? (
