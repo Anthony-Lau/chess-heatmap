@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 export default function createGraph(data, title) {
   // set the dimensions and margins of the graph
   const margin = {
-    top: 30, right: 30, bottom: 30, left: 30,
+    top: 30, right: 0, bottom: 30, left: 30,
   }
   const width = 450 - margin.left - margin.right
   const height = 450 - margin.top - margin.bottom
@@ -11,8 +11,11 @@ export default function createGraph(data, title) {
   // append the svg object to the body of the page
   const svg = d3.select('#area')
     .append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom * 6)
+    .attr('preserveAspectRatio', 'xMinYMin meet')
+    .attr('viewBox', '0 0 500 500')
+    .style('margin', 'auto')
+    .style('display', 'block')
+    .classed('svg-content', true)
     .append('g')
     .attr('transform',
       `translate(${margin.left},${margin.top})`)
@@ -55,6 +58,7 @@ export default function createGraph(data, title) {
     .style('display', 'inline-block')
     .style('position', 'absolute')
     .style('padding', '5px')
+    .style('color', 'black')
 
   // Three function that change the tooltip when user hover / move / leave a cell
   function mouseover() {
@@ -97,6 +101,8 @@ export default function createGraph(data, title) {
     .attr('x', 400 / 2)
     .attr('y', -10)
     .style('text-anchor', 'middle')
+    .style('color', 'inherit')
+    .style('fill', 'currentColor')
     .text(title)
 
   // create svg element
@@ -128,4 +134,6 @@ export default function createGraph(data, title) {
     .attr('fill', 'black')
     .style('text-anchor', 'middle')
     .attr('font-size', 10)
+    .style('color', 'inherit')
+    .style('fill', 'currentColor')
 }
