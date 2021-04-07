@@ -12,6 +12,18 @@ const Body = styled.div`
   color: #BABABA;
 `
 
+const Area = styled.div`
+  margin: auto;
+  width: 60em;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 20em;
+  }
+`
+
 function App() {
   const [username, setUsername] = useState('')
   const [error, setError] = useState(false)
@@ -131,7 +143,7 @@ function App() {
         </h3>
       )
         : <span />}
-      <div id="area" height={900} width={450} />
+      <Area id="area" />
     </Body>
   )
 }
