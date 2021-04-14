@@ -47,9 +47,11 @@ const Link = styled.a`
   color: black;
   text-decoration: none;
   font-size: 110%;
+  padding: .3em;
+  text-decoration: underline;
 
   &:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
 `
 
@@ -94,11 +96,11 @@ function App() {
         <CloseButton type="button" onClick={closeModal}>&#x2715;</CloseButton>
         <Content>
           Welcome! This site generates a heatmap of moves from the
-          last 100 played chess games for a lichess user.
+          last 100 chess games played by a lichess user.
           <br />
           <br />
           Castling counts as two moves. So if white castles
-          kingside it will count Kg1 and Rf1 both as moves.
+          kingside it will count Kg1 and Rf1 as moves.
           <br />
           <br />
           If you have any suggestions for this site let me know!

@@ -27,7 +27,7 @@ const Area = styled.div`
 
 function App() {
   const [username, setUsername] = useState('')
-  const [error, setError] = useState(false)
+  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const transformData = (rawJson, player) => {
@@ -35,7 +35,7 @@ function App() {
     const blackCoordHash = {}
 
     rawJson.forEach((game) => {
-      const whitePlayer = game.players.white.user.name === player
+      const whitePlayer = game.players.white.user?.id === player
       let offSet = 0
       if (!whitePlayer) {
         offSet += 1
@@ -101,23 +101,42 @@ function App() {
     ]
   }
 
+  const getUserId = async (checkUsername) => {
+    const userInfo = await (await fetch(`https://lichess.org/api/users/status?ids=${checkUsername}`)).json()
+    if (userInfo.length > 0) {
+      return userInfo[0].id
+    }
+    return ''
+  }
+
   const handleSubmit = async () => {
     if (username === '') {
-      setError(true)
+      setError('Username Is Required')
+    }
+    const userId = await getUserId(username)
+    if (userId === '') {
+      setError('Not a valid user')
     } else {
-      setError(false)
+      setError('')
       setLoading(true)
-      const rawData = await fetch(`https://lichess.org/api/games/user/${username}?max=100`,
+      const rawNdJson = await fetch(`https://lichess.org/api/games/user/${userId}?max=100`,
         {
           headers: {
             Accept: 'application/x-ndjson',
           },
         })
-      const rawJson = (await rawData.text()).match(/.+/g).map(JSON.parse)
-      const data = transformData(rawJson, username)
-      clearGraph()
-      createGraph(data[0], 'Frequency Of White Pieces')
-      createGraph(data[1], 'Frequency Of Black Pieces')
+      const test = await rawNdJson.text()
+      const json = test.split('\n')
+      const rawJson = json.flatMap((string) => (string === '' ? [] : [JSON.parse(string)]))
+      if (rawJson.length === 0) {
+        setError('No games played')
+        clearGraph()
+      } else {
+        const data = transformData(rawJson, userId)
+        clearGraph()
+        createGraph(data[0], 'Frequency Of White Pieces')
+        createGraph(data[1], 'Frequency Of Black Pieces')
+      }
       setLoading(false)
     }
   }
@@ -139,9 +158,9 @@ function App() {
         </h2>
       )
         : <span />}
-      {error ? (
+      {error !== '' ? (
         <h3>
-          Username Is Required
+          {error}
         </h3>
       )
         : <span />}
